@@ -1,12 +1,15 @@
-import './App.css'
+import Navbar from "./components/navbar/Navbar";
+import CategoryListPage from "./pages/category/CategoryListPage";
+
+import "./App.css";
 
 function App() {
-
-  return (
-    <>
-      <h1>App</h1>
-    </>
-  )
+    return (
+        <>
+            <Navbar />
+            <CategoryListPage />
+        </>
+    );
 }
 
-export default App
+export default App;
