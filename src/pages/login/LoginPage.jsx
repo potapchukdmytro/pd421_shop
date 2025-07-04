@@ -12,6 +12,7 @@ import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -56,10 +57,18 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const LoginPage = () => {
+    const navigate = useNavigate();
+
     const handleSubmit = (values) => {
         if (values.rememberMe) {
             localStorage.setItem("user", values.email);
         }
+
+        // replace - LoginPage не збережеться в історії вкладки
+        navigate("/", { replace: true });
+
+        // navigate(-1); переміщує по історії назад
+        // navigate(1);  переміщує по історії вперед
     };
 
     const initValues = {

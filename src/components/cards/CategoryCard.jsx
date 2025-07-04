@@ -7,9 +7,8 @@ import CardActionArea from "@mui/material/CardActionArea";
 const CategoryCard = ({ category }) => {
     return (
         <Card sx={{ maxWidth: 345, height: "100%" }}>
-            <CardActionArea>
+            <CardActionArea sx={{height: "100%"}}>
                 <CardMedia
-                    
                     component="img"
                     height="auto"
                     image={category.image}
