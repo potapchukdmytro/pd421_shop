@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-    Typography,
-    Grid,
-    Container,
-    Box,
-    TextField,
-    Button,
-} from "@mui/material";
+import { Typography, Grid, Container, Fab, Box } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import CategoryCard from "../../components/cards/CategoryCard";
+import { Link } from "react-router";
 
 const data = [
     {
@@ -48,11 +43,6 @@ const data = [
 ];
 
 const CategoryListPage = () => {
-    const [inputData, setInputData] = useState({
-        name: "",
-        description: "",
-        image: "",
-    });
     const [categories, setCategories] = useState(data);
 
     // код у useEffect спрацює тільки при першому рендері компоненті
@@ -60,73 +50,38 @@ const CategoryListPage = () => {
         const localData = localStorage.getItem("categories");
         if (localData) {
             setCategories(JSON.parse(localData));
+        } else {
+            setCategories(data);
+            localStorage.setItem("categories", JSON.stringify(data));
         }
     }, []);
 
-    const inputChangeHandler = (newValue, prop) => {
-        const newData = { ...inputData };
-        newData[prop] = newValue;
-        setInputData(newData);
-    };
-
-    const createCategoryHandler = () => {
-        const newCategory = {
-            name: inputData.name,
-            description: inputData.description,
-            image: inputData.image,
-        };
-
-        const newData = [...categories, newCategory];
-        setCategories(newData);
-        localStorage.setItem("categories", JSON.stringify(newData));
-    };
+    // delete category
+    const handleDelete = (name) => {
+        const newCategories = categories.filter(c => c.name !== name);
+        setCategories(newCategories);
+        localStorage.setItem("categories", JSON.stringify(newCategories));
+    }
 
     return (
         <Container>
             <Typography mt={3} variant="h3" sx={{ textAlign: "center" }}>
                 Категорії
             </Typography>
-            <Box
-                my={2}
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                }}
-            >
-                <TextField
-                    onChange={(e) => inputChangeHandler(e.target.value, "name")}
-                    value={inputData.name}
-                    label="Назва"
-                    variant="standard"
-                />
-                <TextField
-                    onChange={(e) =>
-                        inputChangeHandler(e.target.value, "description")
-                    }
-                    value={inputData.description}
-                    label="Опис"
-                    variant="standard"
-                />
-                <TextField
-                    onChange={(e) =>
-                        inputChangeHandler(e.target.value, "image")
-                    }
-                    value={inputData.image}
-                    label="Зображення"
-                    variant="standard"
-                />
-                <Button onClick={createCategoryHandler} variant="contained">
-                    Додати
-                </Button>
-            </Box>
-            <Grid container spacing={1} mx={3} my={5}>
+            <Grid container spacing={1} mx={3} mt={5} mb={2}>
                 {categories.map((category, index) => (
                     <Grid key={index} size={3}>
-                        <CategoryCard category={category} />
+                        <CategoryCard category={category} deleteCallback={handleDelete} />
                     </Grid>
                 ))}
             </Grid>
+            <Box sx={{ textAlign: "end", mb: 2, mx: 4 }}>
+                <Link to="create">
+                    <Fab color="primary" aria-label="add">
+                        <AddIcon />
+                    </Fab>
+                </Link>
+            </Box>
         </Container>
     );
 };
