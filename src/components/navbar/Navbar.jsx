@@ -137,7 +137,7 @@ const Navbar = () => {
                             display: { xs: "none", md: "flex" },
                         }}
                     >
-                        <Link to="/">
+                        <Link to="/categories">
                             <Button
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 2, color: "white", display: "block" }}

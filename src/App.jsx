@@ -5,19 +5,28 @@ import { Routes, Route } from "react-router";
 import NotFoundPage from "./pages/notFoundPage/NotFoundPage";
 import CategoryCreatePage from "./pages/category/CategoryCreatePage";
 import CategoryUpdatePage from "./pages/category/CategoryUpdatePage";
+import HomePage from "./pages/home/HomePage";
+import DefaultLayout from "./components/layouts/DefaultLayout";
 
 import "./App.css";
 
 function App() {
     return (
         <>
-            <Navbar />
             <Routes>
-                <Route path="/" element={<CategoryListPage />} />
-                <Route path="/create" element={<CategoryCreatePage />} />
-                <Route path="/edit/:name" element={<CategoryUpdatePage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="*" element={<NotFoundPage />} />
+                <Route path="/" element={<DefaultLayout />}>
+                    <Route index element={<HomePage />} />
+                    <Route path="/categories">
+                        <Route index element={<CategoryListPage />} />
+                        <Route path="create" element={<CategoryCreatePage />} />
+                        <Route
+                            path="edit/:name"
+                            element={<CategoryUpdatePage />}
+                        />
+                    </Route>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="*" element={<NotFoundPage />} />
+                </Route>
             </Routes>
         </>
     );

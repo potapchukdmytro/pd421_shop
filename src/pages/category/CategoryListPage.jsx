@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Typography, Grid, Container, Fab, Box } from "@mui/material";
+import { Typography, Grid, Fab, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CategoryCard from "../../components/cards/CategoryCard";
 import { Link } from "react-router";
@@ -64,8 +64,8 @@ const CategoryListPage = () => {
     }
 
     return (
-        <Container>
-            <Typography mt={3} variant="h3" sx={{ textAlign: "center" }}>
+        <>
+            <Typography variant="h3" sx={{ textAlign: "center" }}>
                 Категорії
             </Typography>
             <Grid container spacing={1} mx={3} mt={5} mb={2}>
@@ -82,7 +82,7 @@ const CategoryListPage = () => {
                     </Fab>
                 </Link>
             </Box>
-        </Container>
+        </>
     );
 };
 

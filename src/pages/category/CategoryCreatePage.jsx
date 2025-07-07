@@ -9,13 +9,13 @@ const CategoryCreatePage = () => {
     const handleSubmit = (values) => {
         let categories = [];
         const localData = localStorage.getItem("categories");
-        if(localData) {
+        if (localData) {
             categories = JSON.parse(localData);
         }
 
         const newData = [...categories, values];
         localStorage.setItem("categories", JSON.stringify(newData));
-        navigate("/");
+        navigate(-1);
     };
 
     const validSchema = Yup.object({
@@ -35,57 +35,62 @@ const CategoryCreatePage = () => {
     });
 
     return (
-        <Box
-            sx={{ display: "flex", width: "25%", m: "25px auto", p: "25px" }}
-            flexDirection="column"
-            alignItems="center"
-            component="form"
-            onSubmit={formik.handleSubmit}
-        >
-            <Typography variant="h4">Створення категорії</Typography>
-            <TextField
-                error={formik.touched.name && formik.errors.name}
-                helperText={formik.touched.name ? formik.errors.name : ""}
-                fullWidth
-                sx={{ m: 1 }}
-                label="Назва"
-                variant="standard"
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-            />
-            <TextField
-                fullWidth
-                sx={{ m: 1 }}
-                label="Опис"
-                variant="standard"
-                name="description"
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-            />
-            <TextField
-                fullWidth
-                sx={{ m: 1 }}
-                label="Зображення"
-                variant="standard"
-                name="image"
-                value={formik.values.image}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-            />
-            <Box>
-                <Button type="submit" sx={{ m: 1 }} variant="contained">
-                    Додати
-                </Button>
-                <Link to="/">
-                    <Button sx={{ m: 1 }} color="error" variant="contained">
-                        Скасувати
+            <Box
+                sx={{
+                    display: "flex",
+                    width: "25%",
+                    m: "0px auto",
+                    p: "25px",
+                }}
+                flexDirection="column"
+                alignItems="center"
+                component="form"
+                onSubmit={formik.handleSubmit}
+            >
+                <Typography variant="h4">Створення категорії</Typography>
+                <TextField
+                    error={formik.touched.name && formik.errors.name}
+                    helperText={formik.touched.name ? formik.errors.name : ""}
+                    fullWidth
+                    sx={{ m: 1 }}
+                    label="Назва"
+                    variant="standard"
+                    name="name"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                <TextField
+                    fullWidth
+                    sx={{ m: 1 }}
+                    label="Опис"
+                    variant="standard"
+                    name="description"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                <TextField
+                    fullWidth
+                    sx={{ m: 1 }}
+                    label="Зображення"
+                    variant="standard"
+                    name="image"
+                    value={formik.values.image}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                <Box>
+                    <Button type="submit" sx={{ m: 1 }} variant="contained">
+                        Додати
                     </Button>
-                </Link>
+                    <Link to={-1}>
+                        <Button sx={{ m: 1 }} color="error" variant="contained">
+                            Скасувати
+                        </Button>
+                    </Link>
+                </Box>
             </Box>
-        </Box>
     );
 };
 

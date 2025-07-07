@@ -25,7 +25,7 @@ const CategoryCard = ({ category, deleteCallback }) => {
                 </Typography>
             </CardContent>
             <Box sx={{ display: "flex", justifyContent: "end", m: 2 }}>
-                <Link to={`/edit/${category.name}`}>
+                <Link to={`edit/${category.name}`}>
                     <Fab
                         sx={{ mx: 1 }}
                         size="small"
