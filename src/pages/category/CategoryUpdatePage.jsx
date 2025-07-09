@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import * as Yup from "yup";
+import ScrollToTop from "../../components/functional/ScrollToTop";
 
 const CategoryUpdatePage = () => {
     const [oldCategory, setOldCategory] = useState({
