@@ -13,6 +13,9 @@ import { styled } from "@mui/material/styles";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../features/context/AuthContext";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -58,23 +61,43 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const { login, googleLogin } = useAuth();
+
+    const clientId = "";
 
     const handleSubmit = (values) => {
-        if (values.rememberMe) {
-            localStorage.setItem("user", values.email);
+        const res = login(values);
+        if (res) {
+            navigate("/", { replace: true });
         }
 
         // replace - LoginPage не збережеться в історії вкладки
-        navigate("/", { replace: true });
 
         // navigate(-1); переміщує по історії назад
         // navigate(1);  переміщує по історії вперед
     };
 
+    const handleGoogleSuccess = (response) => {
+        const { credential } = response;
+        const userData = jwtDecode(credential);
+        const auth = {
+            email: userData.email,
+            firstName: userData.given_name,
+            lastName: userData.family_name,
+            avatar: userData.picture,
+        };
+        googleLogin(auth);
+        navigate("/", { replace: true });
+    };
+
+    const handleGoogleError = (error) => {
+        console.log(error);
+    };
+
     const initValues = {
         email: "",
         password: "",
-        rememberMe: false,
+        rememberMe: true,
     };
 
     const validScheme = Yup.object({
@@ -93,7 +116,7 @@ const LoginPage = () => {
     });
 
     return (
-        <>
+        <GoogleOAuthProvider clientId={clientId}>
             <CssBaseline enableColorScheme />
             <SignInContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
@@ -190,13 +213,32 @@ const LoginPage = () => {
                             }
                             label="Не виходити"
                         />
-                        <Button disabled={!formik.isValid} type="submit" fullWidth variant="contained">
+                        <Button
+                            disabled={!formik.isValid}
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                        >
                             Увійти
                         </Button>
+                        <Box sx={{ display: "flex", justifyContent: "center" }}>
+                            <GoogleLogin
+                            	theme="outfiled"
+                                type="standart"
+                                size="large"
+                                text="signup_with"
+                                shape="pill"
+                                ux_mode="popup"
+                                logo_alignment="left"
+                                useOneTap={false}
+                                onSuccess={handleGoogleSuccess}
+                                onError={handleGoogleError}
+                            />
+                        </Box>
                     </Box>
                 </Card>
             </SignInContainer>
-        </>
+        </GoogleOAuthProvider>
     );
 };
 

@@ -1,4 +1,4 @@
-import * as React from "react";
+import {useState} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,13 +13,15 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router";
+import { useAuth } from "../../features/context/AuthContext";
 
 const pages = ["Категорії", "Товари", "Про нас"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Logout"];
 
 const Navbar = () => {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
+    const {user} = useAuth();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -34,7 +36,7 @@ const Navbar = () => {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
-    };
+    };    
 
     return (
         <AppBar position="static">
@@ -169,18 +171,37 @@ const Navbar = () => {
                             justifyContent: "end",
                         }}
                     >
-                        {/* <Tooltip title="Open settings">
-                            <IconButton
-                                onClick={handleOpenUserMenu}
-                                sx={{ p: 0 }}
-                            >
-                                <Avatar
-                                    alt="Remy Sharp"
-                                    src="https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg"
-                                />
-                            </IconButton>
-                        </Tooltip> */}
-                        <Link to="/login">
+                        {user ? (
+                            <Tooltip title="Open settings">
+                                <IconButton
+                                    onClick={handleOpenUserMenu}
+                                    sx={{ p: 0 }}
+                                >
+                                    <Avatar
+                                        alt="Remy Sharp"
+                                        src={user.avatar ? user.avatar : "https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg"}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                        ) : (
+                            <>
+                                <Link to="/login">
+                                    <Button variant="contained" color="error">
+                                        Увійти
+                                    </Button>
+                                </Link>
+                                <Link to="/register">
+                                    <Button
+                                        sx={{ ml: 2 }}
+                                        variant="contained"
+                                        color="error"
+                                    >
+                                        Зареєструватися
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
+                        {/* <Link to="/login">
                             <Button variant="contained" color="error">
                                 Увійти
                             </Button>
@@ -193,7 +214,7 @@ const Navbar = () => {
                             >
                                 Зареєструватися
                             </Button>
-                        </Link>
+                        </Link> */}
                         <Menu
                             sx={{ mt: "45px" }}
                             id="menu-appbar"
