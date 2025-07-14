@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,14 +14,26 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router";
 import { useAuth } from "../../features/context/AuthContext";
+import { styled } from '@mui/material/styles';
+import Badge, { badgeClasses } from '@mui/material/Badge';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { useCart } from "../../features/context/CartContext";
 
 const pages = ["Категорії", "Товари", "Про нас"];
 const settings = ["Profile", "Logout"];
 
+const CartBadge = styled(Badge)`
+  & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+  }
+`;
+
 const Navbar = () => {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
-    const {user} = useAuth();
+    const { user } = useAuth();
+    const {cartCount} = useCart();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -36,7 +48,7 @@ const Navbar = () => {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
-    };    
+    };
 
     return (
         <AppBar position="static">
@@ -179,7 +191,11 @@ const Navbar = () => {
                                 >
                                     <Avatar
                                         alt="Remy Sharp"
-                                        src={user.avatar ? user.avatar : "https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg"}
+                                        src={
+                                            user.avatar
+                                                ? user.avatar
+                                                : "https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg"
+                                        }
                                     />
                                 </IconButton>
                             </Tooltip>
@@ -201,20 +217,17 @@ const Navbar = () => {
                                 </Link>
                             </>
                         )}
-                        {/* <Link to="/login">
-                            <Button variant="contained" color="error">
-                                Увійти
-                            </Button>
-                        </Link>
-                        <Link to="/register">
-                            <Button
-                                sx={{ ml: 2 }}
-                                variant="contained"
-                                color="error"
-                            >
-                                Зареєструватися
-                            </Button>
-                        </Link> */}
+                        <Box>
+                            <IconButton sx={{ml: 2}}>
+                                <ShoppingCartIcon sx={{color: "white"}} fontSize="small" />
+                                <CartBadge
+                                    sx={{color: "white"}}
+                                    color="error"
+                                    badgeContent={cartCount()}
+                                    overlap="circular"
+                                />
+                            </IconButton>
+                        </Box>
                         <Menu
                             sx={{ mt: "45px" }}
                             id="menu-appbar"

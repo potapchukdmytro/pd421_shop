@@ -5,14 +5,17 @@ import { BrowserRouter } from "react-router";
 import "./index.css";
 import ScrollToTop from "./components/functional/ScrollToTop.jsx";
 import { AuthProvider } from "./features/context/AuthContext.jsx";
+import { CartProvider } from "./features/context/CartContext.jsx";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
         <BrowserRouter>
-            <AuthProvider>
-                <ScrollToTop />
-                <App />
-            </AuthProvider>
+            <ScrollToTop />
+            <CartProvider>
+                <AuthProvider>
+                    <App />
+                </AuthProvider>
+            </CartProvider>
         </BrowserRouter>
     </StrictMode>
 );
