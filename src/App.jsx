@@ -12,6 +12,7 @@ import { useEffect } from "react";
 
 import "./App.css";
 import ProductListPage from "./pages/product/ProductListPage";
+import { useDispatch } from "react-redux";
 
 const users = [
     {
@@ -54,6 +55,7 @@ const users = [
 
 function App() {
     const { login, googleLogin } = useAuth();
+    const dispatch = useDispatch();
 
     if (!localStorage.getItem("users")) {
         localStorage.setItem("users", JSON.stringify(users));
@@ -64,7 +66,7 @@ function App() {
         const googleData = localStorage.getItem("googleAuth");
 
         if (authData) {
-            login(JSON.parse(authData));
+            dispatch({type: "LOGIN", payload: JSON.parse(authData)});
             return;
         }
         if (googleData) {

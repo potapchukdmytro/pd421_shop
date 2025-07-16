@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../features/context/AuthContext";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -62,14 +63,13 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 const LoginPage = () => {
     const navigate = useNavigate();
     const { login, googleLogin } = useAuth();
+    const dispatch = useDispatch();
 
     const clientId = "";
 
     const handleSubmit = (values) => {
-        const res = login(values);
-        if (res) {
-            navigate("/", { replace: true });
-        }
+        dispatch({type: "LOGIN", payload: values});
+        navigate("/", { replace: true });
 
         // replace - LoginPage не збережеться в історії вкладки
 
