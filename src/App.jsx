@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import "./App.css";
 import ProductListPage from "./pages/product/ProductListPage";
 import { useDispatch } from "react-redux";
+import RegisterPage from "./pages/register/RegisterPage";
 
 const users = [
     {
@@ -89,6 +90,7 @@ function App() {
                         />
                     </Route>
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
                     <Route path="/test" element={<TestComponent />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>

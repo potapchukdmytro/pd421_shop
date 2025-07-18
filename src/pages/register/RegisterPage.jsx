@@ -1,8 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
@@ -13,9 +11,6 @@ import { styled } from "@mui/material/styles";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router";
-import { useAuth } from "../../features/context/AuthContext";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { useAction } from "../../hooks/useAction";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -37,7 +32,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
     }),
 }));
 
-const SignInContainer = styled(Stack)(({ theme }) => ({
+const SignUpContainer = styled(Stack)(({ theme }) => ({
     height: "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
     minHeight: "100%",
     padding: theme.spacing(2),
@@ -60,46 +55,22 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
-const LoginPage = () => {
+const RegisterPage = () => {
     const navigate = useNavigate();
-    const { googleLogin } = useAuth();
-    const { login } = useAction();
-
-    const clientId = "";
+    const { register } = useAction();
 
     const handleSubmit = (values) => {
-        const result = login(values);
-        if(result) {
+        delete values.confirmPassword;
+        const result = register(values);
+        if (result) {
             navigate("/", { replace: true });
         }
-
-        // replace - LoginPage не збережеться в історії вкладки
-
-        // navigate(-1); переміщує по історії назад
-        // navigate(1);  переміщує по історії вперед
-    };
-
-    const handleGoogleSuccess = (response) => {
-        const { credential } = response;
-        const userData = jwtDecode(credential);
-        const auth = {
-            email: userData.email,
-            firstName: userData.given_name,
-            lastName: userData.family_name,
-            avatar: userData.picture,
-        };
-        googleLogin(auth);
-        navigate("/", { replace: true });
-    };
-
-    const handleGoogleError = (error) => {
-        console.log(error);
     };
 
     const initValues = {
         email: "",
         password: "",
-        rememberMe: true,
+        confirmPassword: "",
     };
 
     const validScheme = Yup.object({
@@ -109,6 +80,8 @@ const LoginPage = () => {
         password: Yup.string()
             .required("Обово'язкове поле")
             .min(6, "Мінімальна довжина 6 символів"),
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref("password"), null], "Паролі повинні збігатися")
     });
 
     const formik = useFormik({
@@ -118,9 +91,9 @@ const LoginPage = () => {
     });
 
     return (
-        <GoogleOAuthProvider clientId={clientId}>
+        <>
             <CssBaseline enableColorScheme />
-            <SignInContainer direction="column" justifyContent="space-between">
+            <SignUpContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
                     <Typography
                         component="h1"
@@ -130,7 +103,7 @@ const LoginPage = () => {
                             fontSize: "clamp(2rem, 10vw, 2.15rem)",
                         }}
                     >
-                        Логін
+                        Реєстрація
                     </Typography>
                     <Box
                         component="form"
@@ -204,44 +177,49 @@ const LoginPage = () => {
                                 onChange={formik.handleChange}
                             />
                         </FormControl>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    onChange={formik.handleChange}
-                                    checked={formik.values.rememberMe}
-                                    name="rememberMe"
-                                    color="primary"
-                                />
-                            }
-                            label="Не виходити"
-                        />
+                        <FormControl>
+                            <FormLabel
+                                error={
+                                    formik.touched.confirmPassword &&
+                                    formik.errors.confirmPassword
+                                }
+                                htmlFor="confirmPassword"
+                            >
+                                Підтвердити пароль
+                            </FormLabel>
+                            <TextField
+                                error={
+                                    formik.touched.confirmPassword &&
+                                    formik.errors.confirmPassword
+                                }
+                                helperText={
+                                    formik.touched.confirmPassword
+                                        ? formik.errors.confirmPassword
+                                        : ""
+                                }
+                                name="confirmPassword"
+                                placeholder="••••••"
+                                type="password"
+                                fullWidth
+                                variant="outlined"
+                                onBlur={formik.handleBlur}
+                                value={formik.values.confirmPassword}
+                                onChange={formik.handleChange}
+                            />
+                        </FormControl>
                         <Button
                             disabled={!formik.isValid}
                             type="submit"
                             fullWidth
                             variant="contained"
                         >
-                            Увійти
+                            Зареєструватися
                         </Button>
-                        <Box sx={{ display: "flex", justifyContent: "center" }}>
-                            <GoogleLogin
-                                theme="outfiled"
-                                type="standart"
-                                size="large"
-                                text="signup_with"
-                                shape="pill"
-                                ux_mode="popup"
-                                logo_alignment="left"
-                                useOneTap={false}
-                                onSuccess={handleGoogleSuccess}
-                                onError={handleGoogleError}
-                            />
-                        </Box>
                     </Box>
                 </Card>
-            </SignInContainer>
-        </GoogleOAuthProvider>
+            </SignUpContainer>
+        </>
     );
 };
 
-export default LoginPage;
+export default RegisterPage;

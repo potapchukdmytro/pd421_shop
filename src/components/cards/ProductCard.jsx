@@ -4,9 +4,12 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Box, Button } from "@mui/material";
 import { useCart } from "../../features/context/CartContext";
+import { useAction } from "../../hooks/useAction";
+import { isInCart } from "../../store/reducers/cartReducer/cartActions";
 
 const ProductCard = ({ product }) => {
-    const {addToCart, removeFromCart, isInCart} = useCart();
+    const {removeFromCart} = useCart();
+    const {addToCart} = useAction();
 
     return (
         <Card sx={{ maxWidth: 345, height: "100%" }}>

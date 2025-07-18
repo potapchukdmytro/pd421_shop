@@ -13,12 +13,12 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router";
-import { useAuth } from "../../features/context/AuthContext";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useCart } from "../../features/context/CartContext";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAction } from "../../hooks/useAction";
 
 const pages = ["Категорії", "Товари", "Про нас"];
 
@@ -33,8 +33,9 @@ const Navbar = () => {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const { user } = useSelector((state) => state.auth);
-    const { cartCount } = useCart();
-    const dispatch = useDispatch();
+    // const { cartCount } = useCart();
+    const {cartCount} = useSelector(state => state.cart);
+    const { logout } = useAction();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -51,13 +52,13 @@ const Navbar = () => {
         setAnchorElUser(null);
     };
 
-    const logout = () => {
-        dispatch({ type: "LOGOUT" });
+    const handleLogout = () => {
+        logout();
     };
 
     const settings = [
         { name: "Profile", action: null },
-        { name: "Logout", action: logout },
+        { name: "Logout", action: handleLogout },
     ];
 
     return (
@@ -236,7 +237,7 @@ const Navbar = () => {
                                 <CartBadge
                                     sx={{ color: "white" }}
                                     color="error"
-                                    badgeContent={cartCount()}
+                                    badgeContent={cartCount}
                                     overlap="circular"
                                 />
                             </IconButton>
